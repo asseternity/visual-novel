@@ -64,7 +64,7 @@ func _ready() -> void:
 	# ── Music player with loop
 	_music_player = AudioStreamPlayer.new()
 	_music_player.name = "MusicPlayer"
-	_music_player.bus = "Master"
+	_music_player.bus = "Music"
 	_music_player.volume_db = music_volume_db
 	add_child(_music_player)
 
@@ -87,7 +87,7 @@ func _ready() -> void:
 	for i in SFX_POOL_SIZE:
 		var p := AudioStreamPlayer.new()
 		p.name = "SFXPlayer_%d" % i
-		p.bus = "Master"
+		p.bus = "SFX"
 		p.volume_db = sfx_volume_db
 		add_child(p)
 		_sfx_players.append(p)

@@ -41,6 +41,7 @@ const FONT_SIZE_TITLE  := 28
 const MARGIN_PANEL     := 16   # MarginContainer default padding
 const MARGIN_INNER     := 12   # HBoxContainer / VBoxContainer separation
 
+var is_juice_enabled: bool = true
 var global_theme: Theme
 
 func _ready() -> void:
@@ -55,14 +56,19 @@ func _process(_delta: float) -> void:
 	# This is the only reliable way to fight Dialogic's layout system.
 	var to_remove: Array = []
 	for entry in _name_badge_pins:
-		var badge: Control = entry.badge
-		var textbox: Control = entry.textbox
-		if not is_instance_valid(badge) or not is_instance_valid(textbox):
+		# ── FIX: Check validity BEFORE assigning to typed variables ──
+		if not is_instance_valid(entry.badge) or not is_instance_valid(entry.textbox):
 			to_remove.append(entry)
 			continue
+			
+		# Now it is completely safe to cast them
+		var badge: Control = entry.badge
+		var textbox: Control = entry.textbox
+		
 		# Sit the badge ENTIRELY above the textbox top edge
 		var badge_h: float = max(badge.size.y, 56.0)
 		badge.global_position = textbox.global_position + Vector2(50, -badge_h - 6)
+		
 	for e in to_remove:
 		_name_badge_pins.erase(e)
 
@@ -713,7 +719,8 @@ func register_overlays(
 
 # ─── SCREEN SHAKE (CanvasLayer offset) ────────────────────────────────
 func screen_shake(magnitude: float = 12.0, duration: float = 0.4) -> void:
-	if _game_layer == null or _shake_active:
+	# Add the "not is_juice_enabled" check here!
+	if not is_juice_enabled or _game_layer == null or _shake_active:
 		return
 	_shake_active = true
 	var t := create_tween()
@@ -730,6 +737,7 @@ func screen_shake(magnitude: float = 12.0, duration: float = 0.4) -> void:
 
 # ─── BACKGROUND FLASH ─────────────────────────────────────────────────
 func background_flash(color: Color = COLOR_TEXT, duration: float = 0.25) -> void:
+	if not is_juice_enabled: return
 	if _flash_rect == null:
 		return
 	var c := color
@@ -747,6 +755,7 @@ func background_flash(color: Color = COLOR_TEXT, duration: float = 0.25) -> void
 
 # ─── TOAST NOTIFICATIONS ──────────────────────────────────────────────
 func toast(text: String, color: Color = COLOR_ACCENT_3, lifetime: float = 2.4) -> void:
+	if not is_juice_enabled: return
 	if _toast_box == null:
 		return
 	Audio.play("toast")
@@ -811,6 +820,7 @@ func toast(text: String, color: Color = COLOR_ACCENT_3, lifetime: float = 2.4) -
 
 # ─── FLOATING STAT NUMBERS ────────────────────────────────────────────
 func spawn_floating_stat(character_id: String, stat: String, delta: int) -> void:
+	if not is_juice_enabled: return
 	if _floating_root == null or delta == 0:
 		return
 
