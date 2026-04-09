@@ -1,0 +1,54 @@
+[v] fix bugs
+[v] get top bars working
+[v] write in your name
+[v] get shelf menu open and close-able
+[v] CROOKED THINGS, ANIMATE BUTTONS CROOKEDING
+[v] FONTS
+[v] fix compilation errors and bugs
+[v] change main menu BG to a neon city, and the more than frens is a SUPER STANDING OUT, MAIN FOCUS billboard sign
+[v] Changeable backgrounds
+[v] main menu
+[v] MASTER UI THEME!!!
+[_] save to github
+[_] UI click sounds
+[_] funky music
+
+[_] make UI look even better
+
+[_] GAME JUICE!! 
+[_] emotion changes - game juice!
+[_] dialogues themselves and making choices has to be FUN
+
+[_] protagonist information decisions like choice of GAMES!
+[_] Animalish noises
+
+[_] Blerps minigame
+
+[_] pause menu
+
+[_] decide on theme
+[_] write story miro board
+[_] finalize designs
+[_] go through phone notes and integrate all
+[_] write characters - detailed, worledview, Agrestia-like
+[_] write articy import tool
+[_] outline story
+[_] find the FUN
+[_] write dialogues
+
+[_] integrate blerps system
+
+[_] 
+[_] 
+[_] 
+[_] 
+[_] 
+[_] 
+[_] 
+[_] 
+[_] 
+[_] 
+[_] 
+[_] 
+[_] 
+[_] 

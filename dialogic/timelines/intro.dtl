@@ -1,0 +1,24 @@
+[signal arg="bg:Backstreet_Spring_Afternoon"]
+join Allie (neutral) center
+Allie: Hey there! Wait... what was your name again?
+[text_input var="PlayerName" text="What is your name?"]
+Allie: Oh hey {PlayerName}! You made it.
+Allie (happy): I was just thinking about you.
+Allie: So what's the deal?
+- Hey Allie, good to see you!
+	Allie (happy): Awww, you're sweet.[signal=Allie:morale:+10][signal=Allie:relationship:+5]
+- ...do I know you?
+	Allie (neutral): Oh. Right. Nevermind.[signal=Allie:morale:-15][signal=Allie:relationship:-5]
+- Tell me a joke.
+	Allie (neutral): Uh, okay! Why did the bicycle fall over?[signal=Allie:morale:+5]
+	Allie (happy): Because it was two-tired!
+[signal arg="bg:Cafeteria_Day"]
+Allie: Let's grab a seat inside, yeah?
+update Allie left
+join Bing (neutral) right
+Bing: Hey {PlayerName}, mind if I join?
+- Of course!
+	Bing (happy): Thanks![signal=Bing:morale:+10][signal=Bing:relationship:+5]
+- Actually, I'm busy.
+	Bing (neutral): Oh... okay.[signal=Bing:morale:-10]
+leave --All--
