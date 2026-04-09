@@ -14,6 +14,7 @@
 [v] funky music
 [v] GAME JUICE!!
 
+[_] make voice samples
 [_] emotion changes sounds
 [_] emotion changes - game juice!
 [_] animalish noises
