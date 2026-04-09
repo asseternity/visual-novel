@@ -19,6 +19,7 @@
 [_] animalish noises
 
 [_] make UI look even better
+[_] fix: screen shaking on main menu
 [_] dialogues themselves and making choices has to be FUN
 
 [_] protagonist information decisions like choice of GAMES!
