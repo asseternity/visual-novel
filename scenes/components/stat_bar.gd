@@ -4,12 +4,13 @@ extends Control
 
 @export var character_id: String = ""
 
-@onready var name_label: Label       = $HBox/NameLabel
-@onready var morale_bar: ProgressBar = $HBox/Bars/MoraleRow/MoraleBar
-@onready var morale_lbl: Label       = $HBox/Bars/MoraleRow/MoraleLabel
-@onready var rel_bar:    ProgressBar = $HBox/Bars/RelRow/RelBar
-@onready var rel_lbl:    Label       = $HBox/Bars/RelRow/RelLabel
-@onready var bg:         Panel       = $Bg
+# Note the updated paths pointing inside $Bg
+@onready var name_label: Label       = $Bg/HBox/NameLabel
+@onready var morale_bar: ProgressBar = $Bg/HBox/Bars/MoraleRow/MoraleBar
+@onready var morale_lbl: Label       = $Bg/HBox/Bars/MoraleRow/MoraleLabel
+@onready var rel_bar:    ProgressBar = $Bg/HBox/Bars/RelRow/RelBar
+@onready var rel_lbl:    Label       = $Bg/HBox/Bars/RelRow/RelLabel
+@onready var bg:         PanelContainer = $Bg
 @onready var particles:  GPUParticles2D = $Particles
 
 func _ready() -> void:
@@ -138,6 +139,7 @@ func _refresh_immediate() -> void:
 
 func _on_stat_changed(cid: String, stat: String, old_value: int, new_value: int) -> void:
 	if cid != character_id: return
+	Audio.play("stat_up" if new_value > old_value else "stat_down")
 	var bar: ProgressBar = morale_bar if stat == "morale" else rel_bar
 	var lbl: Label       = morale_lbl if stat == "morale" else rel_lbl
 	_animate_bar(bar, lbl, stat, old_value, new_value)

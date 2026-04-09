@@ -23,8 +23,6 @@ var character_colors := {
 	"Bing":  Color("#00f0ff"),
 }
 
-var _accent_cycle := [COLOR_ACCENT, COLOR_ACCENT_2, COLOR_ACCENT_3, COLOR_ACCENT_4]
-
 var _name_badge_pins: Array = []   # Array of {badge: Control, textbox: Control}
 
 # ─── TWEEN TOKENS ─────────────────────────────────────────────────────
@@ -193,11 +191,11 @@ const FONT_CACHE_DIR := "user://fonts/"
 # Orbitron: futuristic for UI body text.
 # Press Start 2P: pixel arcade for buttons & titles.
 const _FONT_DEFS := {
-	"body":  "https://raw.githubusercontent.com/google/fonts/main/ofl/orbitron/static/Orbitron-Regular.ttf",
-	"title": "https://raw.githubusercontent.com/google/fonts/main/ofl/pressstart2p/PressStart2P-Regular.ttf",
-	"fun":   "https://raw.githubusercontent.com/google/fonts/main/ofl/bangers/Bangers-Regular.ttf",
-	"hand":  "https://raw.githubusercontent.com/google/fonts/main/ofl/permanentmarker/PermanentMarker-Regular.ttf",
-	"chunky": "https://raw.githubusercontent.com/google/fonts/main/ofl/sniglet/Sniglet-ExtraBold.ttf"
+	"body":   "https://raw.githubusercontent.com/google/fonts/main/ofl/russoone/RussoOne-Regular.ttf",
+	"title":  "https://raw.githubusercontent.com/google/fonts/main/ofl/pressstart2p/PressStart2P-Regular.ttf",
+	"fun":    "https://raw.githubusercontent.com/google/fonts/main/ofl/bangers/Bangers-Regular.ttf",
+	"hand":   "https://raw.githubusercontent.com/google/fonts/main/ofl/indieflower/IndieFlower-Regular.ttf",
+	"chunky": "https://raw.githubusercontent.com/google/fonts/main/ofl/bungee/Bungee-Regular.ttf"
 }
 
 var _fonts: Dictionary = {}
@@ -286,8 +284,12 @@ func _on_node_added(node: Node) -> void:
 		node.theme = global_theme
 		_strip_overrides.call_deferred(node)
 
-	# Task 4: extend panel FX to PanelContainer (covers Dialogic windows).
-	# ScrollContainer is a PanelContainer subclass we intentionally skip.
+	# NEW: forcefully style the Dialogic dialog text panel
+	if node is Panel or node is PanelContainer:
+		var nm := String(node.name).to_lower()
+		if "dialog" in nm and ("text" in nm or "panel" in nm) and not "name" in nm:
+			call_deferred("_apply_juicy_dialog_panel", node)
+
 	if (node is Panel or node is PanelContainer) and not (node is ScrollContainer):
 		_attach_panel_fx.call_deferred(node)
 
@@ -308,6 +310,11 @@ func _strip_overrides(node: Node) -> void:
 		return
 	if node.name == "DialogicNode_NameLabel":
 		return
+	# NEW: don't strip the dialog text panel — we explicitly style it
+	if (node is Panel or node is PanelContainer):
+		var nm := String(node.name).to_lower()
+		if "dialog" in nm and ("text" in nm or "panel" in nm) and not "name" in nm:
+			return
 	# NEW: don't strip dialog text panel — we set padding there.
 	var name_lower := String(node.name).to_lower()
 	if (node is Panel or node is PanelContainer) and "dialog" in name_lower and "text" in name_lower:
@@ -399,8 +406,9 @@ func burst(node: Control, color: Color = COLOR_ACCENT, amount: int = 16) -> void
 
 func confetti(node: Control, amount: int = 28) -> void:
 	var colors := [COLOR_ACCENT, COLOR_ACCENT_2, COLOR_ACCENT_3, COLOR_ACCENT_4, COLOR_GOOD]
+	var per_color: int = int(amount / float(colors.size()))
 	for c in colors:
-		burst(node, c, int(amount / colors.size()))
+		burst(node, c, per_color)
 
 # ─── PUBLIC HELPERS ───────────────────────────────────────────────────
 ## Call from any script to force-attach the panel FX to a specific node.
@@ -414,6 +422,7 @@ func get_character_color(id: String) -> Color:
 func pop_in(node: Control, delay: float = 0.0) -> void:
 	if not is_instance_valid(node):
 		return
+	Audio.play("menu_open", -4.0)
 	node.scale = Vector2.ZERO
 	node.pivot_offset = node.size * 0.5
 	var t := node.create_tween()
@@ -454,6 +463,7 @@ func flash(node: CanvasItem, color: Color = COLOR_TEXT, duration: float = 0.4) -
 func whoosh(node: Control, from_dir: Vector2 = Vector2.LEFT, distance: float = 200.0) -> void:
 	if not is_instance_valid(node):
 		return
+	Audio.play("menu_open")
 	var final_pos: Vector2 = node.position
 	node.position = final_pos + from_dir * distance
 	node.modulate.a = 0.0
@@ -549,22 +559,26 @@ func _spawn_background() -> void:
 const PANEL_FX_SHADER_CODE := """
 shader_type canvas_item;
 uniform float scan_density  : hint_range(10.0, 300.0) = 110.0;
-uniform float scan_strength : hint_range(0.0, 0.5)   = 0.12;
+uniform float scan_strength : hint_range(0.0, 0.5)    = 0.12;
 uniform vec4  glow_color    : source_color = vec4(1.0, 0.16, 0.48, 1.0);
-uniform float pulse_speed   : hint_range(0.0, 5.0)   = 1.8;
+uniform float pulse_speed   : hint_range(0.0, 5.0)    = 1.8;
 
 void fragment() {
+	// The blinking scanlines
 	float scan  = sin(UV.y * scan_density + TIME * 4.0) * 0.5 + 0.5;
-	float alpha = scan * scan_strength;
-
-	float edge_dist = min(min(UV.x, UV.y), min(1.0 - UV.x, 1.0 - UV.y));
-	float edge  = 1.0 - smoothstep(0.0, 0.15, edge_dist);
+	
+	// The edge glow 
+	// Multiplying UV.x prevents the glow from stretching too far inward on wide panels
+	vec2 edge_uv = vec2(UV.x * 4.0, UV.y);
+	vec2 edge_dist = min(edge_uv, vec2(4.0, 1.0) - edge_uv);
+	float edge  = 1.0 - smoothstep(0.0, 0.25, min(edge_dist.x, edge_dist.y));
+	
 	float pulse = sin(TIME * pulse_speed) * 0.5 + 0.5;
 
-	vec3 rgb = glow_color.rgb * edge * pulse * 0.7;
-	alpha   += edge * pulse * 0.45;
+	// Apply the color to BOTH the edge glow and the scanlines
+	float final_alpha = (scan * scan_strength) + (edge * pulse * 0.45);
 
-	COLOR = vec4(rgb, clamp(alpha, 0.0, 1.0));
+	COLOR = vec4(glow_color.rgb, clamp(final_alpha, 0.0, 1.0));
 }
 """
 
@@ -585,15 +599,15 @@ func _attach_panel_fx(panel: Control) -> void:
 
 	var rect := ColorRect.new()
 	rect.name = "_PanelFX"
-	rect.color = Color(1, 1, 1, 1) # actual colour comes from shader
+	rect.color = Color(1, 1, 1, 1) 
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rect.anchor_right  = 1.0
-	rect.anchor_bottom = 1.0
+	
+	# FIX: Force the rect to stretch and fill the parent dynamically
+	rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	rect.z_index = 10
 
 	var mat := ShaderMaterial.new()
 	mat.shader = _get_panel_fx_shader()
-	# Per-panel randomised pulse speed so they don't throb in sync.
 	mat.set_shader_parameter("pulse_speed", randf_range(1.2, 2.4))
 	rect.material = mat
 
@@ -735,6 +749,7 @@ func background_flash(color: Color = COLOR_TEXT, duration: float = 0.25) -> void
 func toast(text: String, color: Color = COLOR_ACCENT_3, lifetime: float = 2.4) -> void:
 	if _toast_box == null:
 		return
+	Audio.play("toast")
 	var panel := PanelContainer.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
@@ -866,3 +881,80 @@ func _scan_for_statbar(node: Node, character_id: String) -> Vector2:
 		if r != Vector2.ZERO:
 			return r
 	return Vector2.ZERO
+
+func _apply_juicy_dialog_panel(panel: Control) -> void:
+	if not is_instance_valid(panel):
+		return
+
+	# ── ESCAPE DIALOGIC'S SIZER CONSTRAINT ──
+	var sizer := panel.get_parent() as Control
+	if sizer and sizer.name == "Sizer":
+		# Calculate width dynamically so it grows from the center
+		var screen_w := panel.get_viewport_rect().size.x
+		var desired_w := screen_w * 0.88 # 88% of screen width
+		var half_w := desired_w / 2.0
+
+		sizer.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+		sizer.offset_left = -half_w
+		sizer.offset_right = half_w
+		sizer.offset_bottom = -40
+		sizer.offset_top = -260 # 220px tall
+		
+		# Now tell the panel to fill our perfectly sized Sizer
+		panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+		panel.custom_minimum_size = Vector2.ZERO
+
+	# Chunky dark panel with strong pink border + cyan glow
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.04, 0.02, 0.10, 0.96)
+	sb.border_color = COLOR_ACCENT
+	sb.border_width_left   = 5
+	sb.border_width_right  = 7
+	sb.border_width_top    = 5
+	sb.border_width_bottom = 8
+	sb.corner_radius_top_left     = 30
+	sb.corner_radius_top_right    = 10
+	sb.corner_radius_bottom_left  = 10
+	sb.corner_radius_bottom_right = 30
+	sb.shadow_color = Color(COLOR_ACCENT_2.r, COLOR_ACCENT_2.g, COLOR_ACCENT_2.b, 0.85)
+	sb.shadow_size = 20
+	sb.shadow_offset = Vector2(0, 8)
+	sb.content_margin_left   = 48
+	sb.content_margin_right  = 48
+	sb.content_margin_top    = 32
+	sb.content_margin_bottom = 32
+	sb.anti_aliasing = true
+	panel.add_theme_stylebox_override("panel", sb)
+
+	_style_dialog_text_child(panel)
+	_stretch_dialog_text_child(panel)
+
+
+func _stretch_dialog_text_child(panel: Node) -> void:
+	# Because the parent is a PanelContainer, we use size_flags instead of anchors!
+	for child in panel.get_children():
+		if child is RichTextLabel:
+			var rtl := child as RichTextLabel
+			rtl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			rtl.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			rtl.fit_content = false
+			rtl.scroll_active = false
+			return
+		_stretch_dialog_text_child(child)
+
+
+func _style_dialog_text_child(panel: Node) -> void:
+	for child in panel.get_children():
+		if child is RichTextLabel:
+			var rtl := child as RichTextLabel
+			rtl.add_theme_color_override("default_color", COLOR_TEXT)
+			rtl.add_theme_color_override("font_outline_color", COLOR_PANEL_DARK)
+			rtl.add_theme_constant_override("outline_size", 5)
+			rtl.add_theme_font_size_override("normal_font_size", 26)
+			rtl.add_theme_font_size_override("bold_font_size", 26)
+			rtl.add_theme_font_size_override("italics_font_size", 26)
+			if _fonts.has("body"):
+				rtl.add_theme_font_override("normal_font", _fonts["body"])
+				rtl.add_theme_font_override("bold_font", _fonts["body"])
+			return
+		_style_dialog_text_child(child)

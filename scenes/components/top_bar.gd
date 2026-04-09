@@ -4,41 +4,15 @@ extends Control
 const StatBarScene := preload("res://scenes/components/StatBar.tscn")
 
 @onready var hbox: HBoxContainer = $HBox
-@onready var bg:   Panel         = $Panel
 
 func _ready() -> void:
 	# Slim, doesn't cover character's face
 	custom_minimum_size = Vector2(0, 64)
 	mouse_filter = Control.MOUSE_FILTER_PASS  # PASS not IGNORE — we still want stat bars hoverable
 
-	theme    = UITheme.global_theme
-	bg.theme = UITheme.global_theme
-
-	# ── High-contrast custom panel that screams "arcade marquee"
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#0a0418")               # Almost black
-	style.border_color = Color("#00f0ff")
-	style.border_width_bottom = 5
-	style.border_width_left   = 0
-	style.border_width_right  = 0
-	style.border_width_top    = 0
-	style.corner_radius_bottom_left  = 32
-	style.corner_radius_bottom_right = 32
-	style.shadow_color = Color(UITheme.COLOR_ACCENT.r, UITheme.COLOR_ACCENT.g, UITheme.COLOR_ACCENT.b, 0.65)
-	style.shadow_size = 14
-	style.shadow_offset = Vector2(0, 6)
-	style.content_margin_left   = 32
-	style.content_margin_right  = 32
-	style.content_margin_top    = 6
-	style.content_margin_bottom = 10
-	bg.add_theme_stylebox_override("panel", style)
-
-	# Force FX overlay (scanlines + edge glow) on this panel right now.
-	UITheme.attach_fx(bg)
+	theme = UITheme.global_theme
 
 	# ── Reparent HBox into a MarginContainer for breathing room.
-	# IMPORTANT: do this BEFORE referencing $HBox anywhere, and re-cache
-	# the reference because $HBox no longer resolves after the move.
 	var margin := MarginContainer.new()
 	margin.name = "InnerMargin"
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -46,7 +20,7 @@ func _ready() -> void:
 	margin.add_theme_constant_override("margin_bottom", 8)
 	margin.add_theme_constant_override("margin_left",   24)
 	margin.add_theme_constant_override("margin_right",  24)
-	bg.add_child(margin)
+	add_child(margin) # Attach to TopBar directly
 	remove_child(hbox)
 	margin.add_child(hbox)
 

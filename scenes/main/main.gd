@@ -28,11 +28,18 @@ func _ready() -> void:
 	# Stat-change global hooks
 	GameState.stat_changed.connect(_on_global_stat_changed)
 
-	# Dialogue squish on every line advance
+	# Audio hooks for Dialogic
 	if Dialogic.Text.has_signal("about_to_show_text"):
 		Dialogic.Text.about_to_show_text.connect(_on_dialogue_advance)
 	if Dialogic.Text.has_signal("speaker_updated"):
 		Dialogic.Text.speaker_updated.connect(_on_speaker_updated)
+
+	# NEW: choices showing up
+	if Dialogic.Choices.has_signal("choices_shown"):
+		Dialogic.Choices.choices_shown.connect(_on_choices_shown)
+	# NEW: text input popups
+	if Dialogic.has_signal("text_input_shown"):
+		Dialogic.text_input_shown.connect(_on_input_shown)
 
 	# Start the intro timeline
 	Dialogic.start("res://dialogic/timelines/intro.dtl")
@@ -60,6 +67,7 @@ func _on_dialogic_var_changed(info: Dictionary) -> void:
 			GameState.player_name_changed.emit(new_name)
 
 func _on_dialogue_advance(_info: Variant = null) -> void:
+	Audio.play("dialogue_advance", -10.0, 0.15)
 	var panel := _find_dialog_text_panel()
 	if panel:
 		UITheme.squish(panel, 0.10)
@@ -69,6 +77,12 @@ func _on_speaker_updated(_character: Variant) -> void:
 	var portrait := _find_active_portrait()
 	if portrait:
 		UITheme.wiggle(portrait, 3.0, 1)
+
+func _on_choices_shown(_info: Variant = null) -> void:
+	Audio.play("choice_show")
+
+func _on_input_shown(_info: Variant = null) -> void:
+	Audio.play("input_show")
 
 # ─── BACKGROUND SYSTEM ────────────────────────────────────────────────
 const BG_EXTENSIONS := [".png", ".jpg", ".jpeg", ".webp"]

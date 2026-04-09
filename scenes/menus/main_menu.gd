@@ -97,6 +97,7 @@ func _start_logo_bob() -> void:
 
 # ─── BUTTON HANDLERS ──────────────────────────────────────────────────
 func _on_new_game() -> void:
+	Audio.play("new_game")
 	UITheme.confetti(btn_new, 40)
 	UITheme.squish(btn_new, 0.4)
 	await get_tree().create_timer(0.25).timeout
@@ -117,6 +118,7 @@ func _on_settings() -> void:
 	UITheme.toast("Settings coming soon!", UITheme.COLOR_ACCENT_2)
 
 func _on_quit() -> void:
+	Audio.play("quit")
 	UITheme.squish(btn_quit, 0.4)
 	var t := create_tween()
 	t.tween_property(self, "modulate:a", 0.0, 0.4)

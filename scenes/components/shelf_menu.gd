@@ -2,7 +2,7 @@
 extends Control
 
 @onready var tab: Button = $Tab
-@onready var bg:  Panel  = $Bg
+@onready var bg:  PanelContainer  = $Bg
 
 var open: bool = false
 var _shelf_x_open:   float
@@ -55,6 +55,7 @@ func _centre_arrow() -> void:
 
 func _on_toggle() -> void:
 	open = not open
+	Audio.play("shelf_open" if open else "shelf_close")
 
 	# Slide the whole shelf control. 
 	var target_x := _shelf_x_open if open else _shelf_x_closed

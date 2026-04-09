@@ -9,24 +9,27 @@
 [v] Changeable backgrounds
 [v] main menu
 [v] MASTER UI THEME!!!
-[_] save to github
-[_] UI click sounds
-[_] funky music
+[v] save to github
+[v] UI click sounds
+[v] funky music
+[v] GAME JUICE!!
+
+[_] emotion changes sounds
+[_] emotion changes - game juice!
+[_] animalish noises
 
 [_] make UI look even better
-
-[_] GAME JUICE!! 
-[_] emotion changes - game juice!
 [_] dialogues themselves and making choices has to be FUN
 
 [_] protagonist information decisions like choice of GAMES!
-[_] Animalish noises
 
 [_] Blerps minigame
 
-[_] pause menu
+[_] pause menu with settings and quit game
+[_] settings
 
 [_] decide on theme
+[_] worldbuilding
 [_] write story miro board
 [_] finalize designs
 [_] go through phone notes and integrate all
@@ -34,9 +37,10 @@
 [_] write articy import tool
 [_] outline story
 [_] find the FUN
-[_] write dialogues
 
+[_] articy integration
 [_] integrate blerps system
+[_] write dialogues
 
 [_] 
 [_] 
