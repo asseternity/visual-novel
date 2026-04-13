@@ -71,11 +71,26 @@ func _on_dialogic_var_changed(info: Dictionary) -> void:
 			GameState.player_name_changed.emit(new_name)
 
 func _on_dialogue_advance(_info: Variant = null) -> void:
-	Audio.play("dialogue_advance", -10.0, 0.15)
+	# Randomize pitch every single time the line advances so it never sounds repetitive
+	Audio.play("dialogue_advance", -10.0, 0.25) 
+	
 	var panel := _find_dialog_text_panel()
 	if panel:
-		UITheme.squish(panel, 0.10)
-		UITheme.burst(panel, UITheme.COLOR_ACCENT_2, 6)
+		# Set pivot to the bottom center so it grows UP and OUT like a comic balloon
+		panel.pivot_offset = Vector2(panel.size.x / 2.0, panel.size.y)
+		
+		# Kill any existing tweens on the panel so rapidly clicking doesn't break it
+		var t := create_tween()
+		
+		# Start slightly squashed and stretched
+		panel.scale = Vector2(1.05, 0.9) 
+		
+		# Spring back to normal
+		t.tween_property(panel, "scale", Vector2.ONE, 0.5)\
+			.set_trans(Tween.TRANS_SPRING).set_ease(Tween.EASE_OUT)
+			
+		# Fire particles from the top edge of the text box
+		UITheme.burst(panel, UITheme.COLOR_ACCENT_2, 8)
 
 func _on_speaker_updated(_character: Variant) -> void:
 	var portrait := _find_active_portrait()

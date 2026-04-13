@@ -1,32 +1,31 @@
-# res://scripts/ui/shelf_menu.gd
 extends Control
 
 @onready var tab: Button = $Tab
 @onready var bg:  PanelContainer  = $Bg
+@onready var vbox: VBoxContainer = $Bg/MarginContainer/VBoxContainer
 
 var open: bool = false
 var _shelf_x_open:   float
 var _shelf_x_closed: float
-
-# Task 2 & 3: arrow label that lives inside the Tab button.
 var _arrow: Label
 
+# The grid for our mini-game
+var blerp_grid: GridContainer
+
 func _ready() -> void:
-	# Explicitly apply our global theme (belt-and-braces for early nodes).
+	# Explicitly apply our global theme
 	theme    = UITheme.global_theme
 	bg.theme = UITheme.global_theme
 	if bg.has_theme_stylebox_override("panel"):
 		bg.remove_theme_stylebox_override("panel")
 	bg.self_modulate = Color.WHITE
 
-	# ── Task 2: replace button text with a Label child we can rotate.
-	tab.text = ""            # let our Label drive the display
+	# Set up the animated arrow
+	tab.text = ""            
 	_arrow = Label.new()
 	_arrow.name = "Arrow"
-	_arrow.text = "◀"        # closed state: left arrow = "pull open"
+	_arrow.text = "◀"        
 	_arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	
-	# Let the label auto-size then we'll centre it once layout settles.
 	_arrow.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	_arrow.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	_arrow.grow_vertical   = Control.GROW_DIRECTION_BOTH
@@ -35,18 +34,19 @@ func _ready() -> void:
 
 	tab.pressed.connect(_on_toggle)
 
-	# ── FIX FOR ISSUE 4: Push the menu entirely off-screen. 
-	# Because Tab has offset_left = -40, it will naturally stick out exactly 40px!
+	# Setup off-screen resting position
 	_shelf_x_open   = get_viewport_rect().size.x - size.x
 	_shelf_x_closed = get_viewport_rect().size.x 
 	position.x = _shelf_x_closed
 
 	UITheme.pop_in(tab)
+	
+	# Build the minigame grid
+	_build_blerp_grid()
 
 func _centre_arrow() -> void:
 	if not is_instance_valid(_arrow) or not is_instance_valid(tab):
 		return
-	# Wait one extra frame so RichTextLabel / Font metrics are final.
 	await get_tree().process_frame
 	if not is_instance_valid(_arrow):
 		return
@@ -57,13 +57,13 @@ func _on_toggle() -> void:
 	open = not open
 	Audio.play("shelf_open" if open else "shelf_close")
 
-	# Slide the whole shelf control. 
+	# Slide the whole shelf control
 	var target_x := _shelf_x_open if open else _shelf_x_closed
 	var slide := create_tween()
 	slide.tween_property(self, "position:x", target_x, UITheme.TWEEN_MED)\
 		.set_trans(UITheme.BOUNCE_TRANS).set_ease(UITheme.BOUNCE_EASE)
 
-	# ── Task 2: animate the arrow by x-scale flip (◀ ↔ ▶).
+	# Animate the arrow flip
 	if is_instance_valid(_arrow):
 		_arrow.pivot_offset = _arrow.size / 2.0
 		var flip := _arrow.create_tween()
@@ -77,3 +77,41 @@ func _on_toggle() -> void:
 			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 	UITheme.squish(tab, 0.4)
+
+func _build_blerp_grid() -> void:
+	var sep = HSeparator.new()
+	sep.add_theme_constant_override("separation", 16)
+	vbox.add_child(sep)
+	
+	var title = Label.new()
+	title.text = "BLERP DECK"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_color", UITheme.COLOR_ACCENT_2)
+	if UITheme._fonts.has("title"): title.add_theme_font_override("font", UITheme._fonts["title"])
+	vbox.add_child(title)
+	
+	blerp_grid = GridContainer.new()
+	blerp_grid.columns = 4
+	blerp_grid.add_theme_constant_override("h_separation", 8)
+	blerp_grid.add_theme_constant_override("v_separation", 8)
+	blerp_grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	vbox.add_child(blerp_grid)
+	
+	for i in 12:
+		var btn = Button.new()
+		btn.custom_minimum_size = Vector2(36, 36)
+		var symbols = ["★", "♥", "♪", "⚡", "☀", "☁", "☠", "♠", "♣", "♦", "☢", "☯"]
+		btn.text = symbols[i]
+		btn.theme = UITheme.global_theme 
+		
+		# Hook up to global Blerp System
+		btn.pressed.connect(_on_blerp_pressed.bind(i))
+		blerp_grid.add_child(btn)
+
+func _on_blerp_pressed(blerp_id: int) -> void:
+	# Close the shelf menu automatically for dramatic effect
+	if open: _on_toggle()
+	
+	var blerp_sys = get_tree().root.get_node_or_null("Main/BlerpLayer/BlerpSystem")
+	if blerp_sys:
+		blerp_sys.trigger_blerp(blerp_id)

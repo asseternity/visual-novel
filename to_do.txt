@@ -13,7 +13,6 @@
 [v] UI click sounds
 [v] funky music
 [v] GAME JUICE!!
-
 [v] make voice samples for allie and bing
 [v] make a fallback generic voice cample
 [v] animalish noises
@@ -22,27 +21,55 @@
 [v] settings
 [v] fix: screen shaking on main menu
 [v] pause menu with settings and quit game
-
 [v] music, voice, effects sounds - separate 
-
-[_] make UI look even better
-[_] dialogues themselves and making choices has to be FUN
-[_] protagonist information decisions like choice of GAMES!
-[_] Blerps minigame
-
-[_] finalize designs of Blue, Azu, Oaky
-[_] ask for designs of TimeTraveler, danky and dame? like their emotes?
-[_] voice samples for others with: https://online-video-cutter.com/crop-video and https://www.freeconvert.com/mp4-to-mp3 and https://clideo.com/editor/322045393/export-result
+[v] make UI look even better
+[v] dialogues themselves and making choices has to be FUN
+[v] Blerps minigame
+[v] get placeholder blerps
+[v] finish the blerps minigame with placeholders
+[v] decide which blerps to use:
+Joy - anime wow
+Sadness - sad horn
+Anger - i cant believe you've done this 
+Fear - emotional damage
+Disgust - smell like a baka
+Surprise - fat cock
+Confidence - i am an esteemed british gentleman
+Resentment - i can smell you
+Rousing Camraderie - let's get ready to rumble
+[v] decide on romance routes:
+- Bung
+- Danky
+- Blue
+- Oaky
+- Ollie
+[v] add blerps
+[v] final list of characters: Ollie, Karen, Danky, Dame, Marci, Dundle, Blue, Azu, Oaky, TT, Bung
+[v] finalize designs of Blue, Azu, Oaky, Danky (based on channel pic), Dame (based on channel pic)
+[v] Ask for designs of TimeTraveler, Marci and Dundle
+[v] Update Bung's design
+[v] check in with the romanceables
+[_] Voice samples for others with: https://online-video-cutter.com/crop-video and https://www.freeconvert.com/mp4-to-mp3 and https://clideo.com/editor/322045393/export-result
+[_] Finalize all characters with designs and animalese
+[_] Finalize writing tasks
 
 [_] decide on theme
 [_] worldbuilding
 [_] write story miro board
 [_] have CONFLICT and SERIOUS DRAMA
 [_] go through phone notes and integrate all
+
 [_] write characters - detailed, worledview, Agrestia-like
 [_] write articy import tool
 [_] outline story
 [_] find the FUN
+[_] protagonist information decisions like choice of GAMES!
+
+[_] save tts thing to github
+[_] play them back to back, recording video
+[_] make mp3 files
+[_] final blerps minigame with finished
+[_] name the blerps internally JoyBlerp, SadnessBlerp, etc!
 
 [_] articy integration
 [_] integrate blerps system

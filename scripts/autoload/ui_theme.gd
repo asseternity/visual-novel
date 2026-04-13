@@ -29,7 +29,8 @@ var _name_badge_pins: Array = []   # Array of {badge: Control, textbox: Control}
 const TWEEN_FAST := 0.15
 const TWEEN_MED  := 0.3
 const TWEEN_SLOW := 0.5
-const BOUNCE_TRANS := Tween.TRANS_ELASTIC
+# Change this to SPRING for natural, dopamine-inducing wobbles
+const BOUNCE_TRANS := Tween.TRANS_SPRING 
 const BOUNCE_EASE  := Tween.EASE_OUT
 
 # ─── FONT SIZES ───────────────────────────────────────────────────────
@@ -342,18 +343,26 @@ func _strip_overrides(node: Node) -> void:
 func _on_btn_hover(node: Control, is_hovering: bool) -> void:
 	if not is_instance_valid(node):
 		return
+		
 	node.pivot_offset = node.size / 2.0
-	var target_scale := Vector2(1.08, 1.08) if is_hovering else Vector2.ONE
-	var target_rot: float = deg_to_rad(randf_range(-5.0, 5.0)) if is_hovering else 0.0
+	
+	var target_scale := Vector2(1.12, 1.12) if is_hovering else Vector2.ONE
+	var target_rot: float = deg_to_rad(randf_range(-3.0, 3.0)) if is_hovering else 0.0
 
 	var t := node.create_tween().set_parallel(true)
-	t.tween_property(node, "scale", target_scale, TWEEN_FAST)\
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	t.tween_property(node, "rotation", target_rot, TWEEN_FAST)\
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	
+	# Spring ignores duration somewhat to simulate actual physics, making it snappy
+	t.tween_property(node, "scale", target_scale, 0.4)\
+		.set_trans(Tween.TRANS_SPRING).set_ease(Tween.EASE_OUT)
+	t.tween_property(node, "rotation", target_rot, 0.4)\
+		.set_trans(Tween.TRANS_SPRING).set_ease(Tween.EASE_OUT)
 
 	if is_hovering:
+		# Add an immediate bright flash when the mouse enters
+		flash(node, COLOR_ACCENT_2, 0.2)
 		_start_pulse(node)
+		# Wiggle it just a little bit to demand attention
+		wiggle(node, 2.0, 1)
 	else:
 		_stop_pulse(node)
 
@@ -599,32 +608,68 @@ func _get_panel_fx_shader() -> Shader:
 func _attach_panel_fx(panel: Control) -> void:
 	if not is_instance_valid(panel):
 		return
-	# Skip if already has FX overlay.
-	if panel.has_node("_PanelFX"):
+
+	# 1. FIX THE "WHITENED OUT" ISSUE
+	# Strip the material from the PanelContainer to restore the StyleBox rendering
+	if panel.material != null:
+		panel.material = null
+
+	# Skip if we already added our FX overlay
+	if panel.has_node("_PanelFXWrapper"):
 		return
 
+	# 2. CLIP TO ROUNDED CORNERS
+	# This tells Godot to use the Panel's StyleBox (including your 30px rounded corners)
+	# as a mask for all children, preventing our rectangular overlay from bleeding outside!
+	panel.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+
+	# 3. FIX THE MARGIN ISSUE
+	# By wrapping our ColorRect in a Node2D, it completely bypasses the
+	# PanelContainer's strict margins. It will snap to the true outer edge.
+	var wrapper := Node2D.new()
+	wrapper.name = "_PanelFXWrapper"
+	
 	var rect := ColorRect.new()
 	rect.name = "_PanelFX"
-	rect.color = Color(1, 1, 1, 1) 
+	rect.color = Color.WHITE
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
-	# FIX: Force the rect to stretch and fill the parent dynamically
-	rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	rect.z_index = 10
-
 	var mat := ShaderMaterial.new()
 	mat.shader = _get_panel_fx_shader()
 	mat.set_shader_parameter("pulse_speed", randf_range(1.2, 2.4))
 	rect.material = mat
+	
+	# Assemble the bypass structure
+	wrapper.add_child(rect)
+	panel.add_child(wrapper)
+	
+	# Move wrapper to the top of the child stack so it renders BEHIND the dialog text
+	panel.move_child(wrapper, 0)
+	
+	# Initial size alignment
+	rect.size = panel.size
+	
+	# Keep the overlay perfectly stretched to the panel's true size
+	panel.resized.connect(func():
+		if is_instance_valid(rect) and is_instance_valid(panel):
+			rect.size = panel.size
+	)
 
-	panel.add_child(rect)
-	panel.move_child(rect, panel.get_child_count() - 1)
-
-# ─── DIALOGIC NAME LABEL JUICE ────────────────────────────────────────
-# ─── DIALOGIC NAME LABEL JUICE ────────────────────────────────────────
 func _apply_juicy_name_label(node: Control) -> void:
 	if not is_instance_valid(node):
 		return
+
+	# --- THE SHADOW REALM BANISHMENT ---
+	var original_bg_panel := node.get_parent() as Control
+	if is_instance_valid(original_bg_panel):
+		# Dialogic actively rebuilds this panel's StyleBox every time a character speaks.
+		# We can't delete it, and clearing the StyleBox gets overwritten.
+		# Solution: Set it to top_level to escape layout constraints, then banish it offscreen.
+		# Because our text 'node' is pinned by _process, it stays on screen perfectly!
+		original_bg_panel.top_level = true
+		original_bg_panel.global_position = Vector2(-9999, -9999)
+		original_bg_panel.self_modulate.a = 0.0
+	# -----------------------------------
 
 	# Big punchy font
 	if _fonts.has("fun"):
@@ -657,7 +702,6 @@ func _apply_juicy_name_label(node: Control) -> void:
 	node.clip_contents = false
 
 	# Register for permanent _process pinning — survives any layout fight.
-	# First clear any stale entries for this badge.
 	_name_badge_pins = _name_badge_pins.filter(func(e): return e.badge != node)
 	_name_badge_pins.append({"badge": node, "textbox": textbox})
 

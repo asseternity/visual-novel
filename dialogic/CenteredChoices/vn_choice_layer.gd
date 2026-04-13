@@ -109,3 +109,51 @@ func _propagate_theme(node: Node, t: Theme) -> void:
 		(node as Control).theme = t
 	for child in node.get_children():
 		_propagate_theme(child, t)
+
+func _ready() -> void:
+	# Don't try to run animations inside the Godot Editor viewport
+	if Engine.is_editor_hint():
+		return
+		
+	# Hook directly into Dialogic's built-in choice event!
+	if Dialogic.Choices.has_signal("choices_shown"):
+		Dialogic.Choices.choices_shown.connect(_animate_choices_in)
+
+func _on_visibility_changed() -> void:
+	if visible:
+		_animate_choices_in()
+
+func _animate_choices_in(_info: Variant = null) -> void:
+	var choices_container: VBoxContainer = get_choices()
+	var active_choices = []
+	
+	# Dialogic toggles the visibility of the buttons themselves,
+	# so checking `child.visible` here works perfectly since Button is a Control.
+	for child in choices_container.get_children():
+		if child is Button and child.visible:
+			active_choices.append(child)
+
+	for i in active_choices.size():
+		var btn: Button = active_choices[i]
+		
+		# Initial hidden state: pushed off-screen to the right, rotated, and scaled down
+		btn.modulate.a = 0.0
+		btn.position.x = 200.0
+		btn.rotation = deg_to_rad(randf_range(-10.0, 10.0))
+		btn.scale = Vector2(0.5, 0.5)
+		btn.pivot_offset = btn.size / 2.0
+		
+		var t := create_tween().set_parallel(true)
+		var delay := i * 0.08 # Stagger delay!
+		
+		# Use TRANS_SPRING for that ultra-bouncy "Dream Daddy" feel
+		t.tween_property(btn, "position:x", 0.0, 0.6).set_delay(delay)\
+			.set_trans(Tween.TRANS_SPRING).set_ease(Tween.EASE_OUT)
+			
+		t.tween_property(btn, "rotation", 0.0, 0.5).set_delay(delay)\
+			.set_trans(Tween.TRANS_SPRING).set_ease(Tween.EASE_OUT)
+			
+		t.tween_property(btn, "scale", Vector2.ONE, 0.5).set_delay(delay)\
+			.set_trans(Tween.TRANS_SPRING).set_ease(Tween.EASE_OUT)
+			
+		t.tween_property(btn, "modulate:a", 1.0, 0.2).set_delay(delay)

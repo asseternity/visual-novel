@@ -1,24 +1,108 @@
 [signal arg="bg:Backstreet_Spring_Afternoon"]
+
 join Allie (neutral) center
 Allie: Hey there! Wait... what was your name again?
 [text_input var="PlayerName" text="What is your name?"]
+
+update Allie (happy) center
 Allie: Oh hey {PlayerName}! You made it.
-Allie (happy): I was just thinking about you.
+Allie: I was just thinking about you.
+
+update Allie (neutral) center
+Allie: The others are already inside. We were about to do a quick spring mixer roll call.
 Allie: So what's the deal?
+
 - Hey Allie, good to see you!
-	Allie (happy): Awww, you're sweet.[signal=Allie:morale:+10][signal=Allie:relationship:+5]
+	update Allie (happy) center
+	Allie: Awww, you're sweet.[signal=Allie:morale:+10][signal=Allie:relationship:+5]
 - ...do I know you?
-	Allie (neutral): Oh. Right. Nevermind.[signal=Allie:morale:-15][signal=Allie:relationship:-5]
+	update Allie (neutral) center
+	Allie: Oh. Right. Nevermind.[signal=Allie:morale:-15][signal=Allie:relationship:-5]
 - Tell me a joke.
 	Allie (neutral): Uh, okay! Why did the bicycle fall over?[signal=Allie:morale:+5]
-	Allie (happy): Because it was two-tired!
+	update Allie (happy) center
+	Allie: Because it was two-tired!
+
+update Allie (happy) center
+Allie: C'mon, let's get inside before everyone steals the good seats.
+
 [signal arg="bg:Cafeteria_Day"]
-Allie: Let's grab a seat inside, yeah?
+
 update Allie left
 join Bing (neutral) right
 Bing: Hey {PlayerName}, mind if I join?
+
 - Of course!
-	Bing (happy): Thanks![signal=Bing:morale:+10][signal=Bing:relationship:+5]
+	update Bing (happy) right
+	Bing: Thanks![signal=Bing:morale:+10][signal=Bing:relationship:+5]
 - Actually, I'm busy.
-	Bing (neutral): Oh... okay.[signal=Bing:morale:-10]
+	update Bing (neutral) right
+	Bing: Oh... okay.[signal=Bing:morale:-10]
+
+update Bing (happy) right
+Bing: Seriously, I only wanted to say hi.
+Allie (neutral): Perfect timing, actually.
+Allie: We're doing a quick hello circle so everybody stops being weird around the new arrival.
+Allie (happy): That means you too, Bing.
+
+leave Bing
+leave Allie
+
+join Cyan (neutral) left
+join DF (neutral) right
+Cyan: Hey, {PlayerName}. I'm Cyan. I usually look serious before lunch.
+update Cyan (happy) left
+Cyan: After lunch, though? I'm delightful.
+
+DF: I'm DF. I was told this was a casual hangout and not a formal introduction.
+update DF (happy) right
+DF: Honestly, this is already more fun than I expected.
+
+leave Cyan
+leave DF
+
+join Dimple (neutral) left
+join Maple (neutral) right
+Dimple: Hi! I'm Dimple. I brought fries, so I clearly understood the assignment.
+update Dimple (happy) left
+Dimple: You can trust anyone who arrives with fries.
+
+Maple: I'm Maple. I was going to make an entrance, but the tray almost won.
+update Maple (happy) right
+Maple: I saved the drink, though, so I'm calling it a victory.
+
+leave Dimple
+leave Maple
+
+join Ramci (neutral) left
+join Zuzu (neutral) right
+Ramci: Ramci. I took the long way here because I forgot where the cafeteria was.
+update Ramci (happy) left
+Ramci: On the bright side, I now know three exits and one vending machine.
+
+Zuzu: I'm Zuzu. I knew exactly where I was going and still arrived dramatically.
+update Zuzu (happy) right
+Zuzu: Which, for the record, is better than arriving normally.
+
+leave Ramci
+leave Zuzu
+
+join Allie (neutral) left
+join Player (neutral) center
+Allie: Okay, last one.
+Allie: {PlayerName}, your turn. Give the room the official version.
+
+Player: I'm {PlayerName}. Apparently I walked into a full cafeteria welcome committee.
+update Player (happy) center
+Player: Honestly? Could be worse.
+
+update Allie (happy) left
+Allie: See? Nailed it.
+Allie: Now nobody gets to say they haven't met you.
+
+leave Player
+update Allie center
+Allie (neutral): That's the whole crew, more or less.
+Allie (happy): Welcome to the table, {PlayerName}.
+
 leave --All--

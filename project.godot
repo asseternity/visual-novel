@@ -27,7 +27,13 @@ Audio="*res://scripts/autoload/audio_manager.gd"
 directories/dch_directory={
 "Allie": "res://dialogic/characters/Allie.dch",
 "Bing": "res://dialogic/characters/Bing.dch",
-"Player": "res://dialogic/characters/Player.dch"
+"Cyan": "res://dialogic/characters/Cyan.dch",
+"DF": "res://dialogic/characters/DF.dch",
+"Dimple": "res://dialogic/characters/Dimple.dch",
+"Maple": "res://dialogic/characters/Maple.dch",
+"Player": "res://dialogic/characters/Player.dch",
+"Ramci": "res://dialogic/characters/Ramci.dch",
+"Zuzu": "res://dialogic/characters/Zuzu.dch"
 }
 directories/dtl_directory={
 "intro": "res://dialogic/timelines/intro.dtl"
@@ -57,6 +63,21 @@ choices/reveal_by_input=false
 save/autosave_delay=60.0
 save/encryption_on_exports_only=true
 audio/type_sound_bus="Voice"
+text/autopauses={}
+audio/channel_defaults={
+"": {
+"audio_bus": "",
+"fade_length": 0.0,
+"loop": false,
+"volume": 0.0
+},
+"music": {
+"audio_bus": "",
+"fade_length": 0.0,
+"loop": true,
+"volume": 0.0
+}
+}
 
 [display]
 

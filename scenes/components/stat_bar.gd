@@ -154,30 +154,48 @@ func _on_stat_changed(cid: String, stat: String, old_value: int, new_value: int)
 func _animate_bar(bar: ProgressBar, lbl: Label, stat: String, from_v: int, to_v: int) -> void:
 	bar.value = from_v
 	var stat_label: String = "MORALE" if stat == "morale" else "RELATIONSHIP"
-	var overshoot: float = float(to_v) + (10.0 if to_v > from_v else -10.0)
+	
+	# Create an intense overshoot
+	var overshoot: float = float(to_v) + (15.0 if to_v > from_v else -15.0)
 	overshoot = clamp(overshoot, 0.0, 100.0)
+	
 	var t := create_tween()
-	t.tween_property(bar, "value", overshoot, UITheme.TWEEN_FAST)\
-		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	t.tween_property(bar, "value", to_v, UITheme.TWEEN_MED)\
-		.set_trans(UITheme.BOUNCE_TRANS).set_ease(UITheme.BOUNCE_EASE)
-	# Live-update the label as the bar fills
+	
+	if to_v > from_v:
+		# POSITIVE GAIN JUICE
+		# 1. Flash the bar pure white instantly
+		bar.self_modulate = Color(2.0, 2.0, 2.0, 1.0) # HDR overbright
+		
+		# 2. Shoot past the target quickly
+		t.tween_property(bar, "value", overshoot, 0.15)\
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+			
+		# 3. Settle back to the actual value with a spring
+		t.tween_property(bar, "value", to_v, 0.6)\
+			.set_trans(Tween.TRANS_SPRING).set_ease(Tween.EASE_OUT)
+			
+		# 4. Fade color back to normal
+		t.parallel().tween_property(bar, "self_modulate", Color.WHITE, 0.5)\
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	else:
+		# NEGATIVE LOSS JUICE
+		bar.self_modulate = UITheme.COLOR_BAD * 1.5
+		t.tween_property(bar, "value", to_v, 0.4)\
+			.set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+		t.parallel().tween_property(bar, "self_modulate", Color.WHITE, 0.4)
+
+	# Live-update the label text
 	t.parallel().tween_method(
 		func(v: float): lbl.text = "%s  %d" % [stat_label, int(round(v))],
-		float(from_v), float(to_v), UITheme.TWEEN_FAST + UITheme.TWEEN_MED
+		float(from_v), float(to_v), 0.4
 	)
-	# Color flash
-	var flash_color := UITheme.COLOR_GOOD if to_v > from_v else UITheme.COLOR_BAD
-	bar.self_modulate = flash_color * 1.6
-	var ct := create_tween()
-	ct.tween_property(bar, "self_modulate", Color.WHITE, UITheme.TWEEN_SLOW)\
-		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	# Punchy label scale-up on the change
+
+	# Heartbeat pump on the label
 	lbl.pivot_offset = lbl.size / 2.0
-	lbl.scale = Vector2(1.4, 1.4)
+	lbl.scale = Vector2(1.6, 1.6)
 	var lt := create_tween()
-	lt.tween_property(lbl, "scale", Vector2.ONE, 0.35)\
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	lt.tween_property(lbl, "scale", Vector2.ONE, 0.6)\
+		.set_trans(Tween.TRANS_SPRING).set_ease(Tween.EASE_OUT)
 
 func _burst(positive: bool) -> void:
 	var mat: ParticleProcessMaterial = particles.process_material
