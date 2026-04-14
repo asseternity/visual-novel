@@ -5,8 +5,19 @@
 &"color": Color(1, 1, 1, 1),
 &"custom_info": {
 "prefix": "",
-"sound_mood_default": "",
-"sound_moods": {},
+"sound_mood_default": "Mood 1",
+"sound_moods": {
+"Mood 1": {
+"mode": 0,
+"name": "Mood 1",
+"pitch_base": 1.0,
+"pitch_variance": 0.1,
+"skip_characters": 4.0,
+"sound_path": "res://assets/voices/new/oaky.mp3",
+"volume_base": 0.0,
+"volume_variance": 0.0
+}
+},
 "style": "",
 "suffix": ""
 },

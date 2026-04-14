@@ -28,11 +28,15 @@ directories/dch_directory={
 "Allie": "res://dialogic/characters/Allie.dch",
 "Bing": "res://dialogic/characters/Bing.dch",
 "Cyan": "res://dialogic/characters/Cyan.dch",
-"DF": "res://dialogic/characters/DF.dch",
 "Dimple": "res://dialogic/characters/Dimple.dch",
+"Eve": "res://dialogic/characters/Eve.dch",
+"Klara": "res://dialogic/characters/Klara.dch",
 "Maple": "res://dialogic/characters/Maple.dch",
+"PP": "res://dialogic/characters/PP.dch",
 "Player": "res://dialogic/characters/Player.dch",
 "Ramci": "res://dialogic/characters/Ramci.dch",
+"Stanky": "res://dialogic/characters/Stanky.dch",
+"Vic": "res://dialogic/characters/Vic.dch",
 "Zuzu": "res://dialogic/characters/Zuzu.dch"
 }
 directories/dtl_directory={

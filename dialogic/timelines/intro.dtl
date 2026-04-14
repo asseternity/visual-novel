@@ -9,7 +9,7 @@ Allie: Oh hey {PlayerName}! You made it.
 Allie: I was just thinking about you.
 
 update Allie (neutral) center
-Allie: The others are already inside. We were about to do a quick spring mixer roll call.
+Allie: Everyone's inside already. We were about to start without you.
 Allie: So what's the deal?
 
 - Hey Allie, good to see you!
@@ -24,7 +24,7 @@ Allie: So what's the deal?
 	Allie: Because it was two-tired!
 
 update Allie (happy) center
-Allie: C'mon, let's get inside before everyone steals the good seats.
+Allie: Anyway, come on. The whole table wants to meet the mysterious {PlayerName}.
 
 [signal arg="bg:Cafeteria_Day"]
 
@@ -39,70 +39,153 @@ Bing: Hey {PlayerName}, mind if I join?
 	update Bing (neutral) right
 	Bing: Oh... okay.[signal=Bing:morale:-10]
 
+update Allie (neutral) left
+Allie: Too late now. You're getting the full welcome tour either way.
 update Bing (happy) right
-Bing: Seriously, I only wanted to say hi.
-Allie (neutral): Perfect timing, actually.
-Allie: We're doing a quick hello circle so everybody stops being weird around the new arrival.
-Allie (happy): That means you too, Bing.
+Bing: We made it kind of official.
+Bing: Not, like, scary official. Just cafeteria official.
+
+update Allie (happy) left
+Allie: It's simple. Everybody says hi, acts normal for five seconds, and then we all pretend this wasn't staged.
 
 leave Bing
-leave Allie
 
-join Cyan (neutral) left
-join DF (neutral) right
-Cyan: Hey, {PlayerName}. I'm Cyan. I usually look serious before lunch.
-update Cyan (happy) left
-Cyan: After lunch, though? I'm delightful.
+join Cyan (neutral) right
+Cyan: I'm Cyan. I look serious when I'm concentrating.
+update Cyan (happy) right
+Cyan: I am, however, incredibly fun once snacks are involved.
 
-DF: I'm DF. I was told this was a casual hangout and not a formal introduction.
-update DF (happy) right
-DF: Honestly, this is already more fun than I expected.
+Allie (neutral): Cyan says that like it's a secret.
+Allie (happy): It is not a secret.
 
 leave Cyan
-leave DF
 
-join Dimple (neutral) left
-join Maple (neutral) right
-Dimple: Hi! I'm Dimple. I brought fries, so I clearly understood the assignment.
-update Dimple (happy) left
-Dimple: You can trust anyone who arrives with fries.
+join Dimple (neutral) right
+Dimple: Hi! I'm Dimple.
+Dimple: I claimed the best seat before anyone else could.
+update Dimple (happy) right
+Dimple: Which means you may sit near me if you bring fries.
 
-Maple: I'm Maple. I was going to make an entrance, but the tray almost won.
-update Maple (happy) right
-Maple: I saved the drink, though, so I'm calling it a victory.
+Allie (happy): See? Very welcoming. Weirdly specific, but welcoming.
 
 leave Dimple
+
+join Maple (neutral) right
+Maple: I'm Maple. I had a dramatic entrance planned.
+Maple: Then the lunch tray happened.
+update Maple (happy) right
+Maple: I saved the drink, though, so I still count that as elegance.
+
+Allie (neutral): Maple has never lost an argument with physics.
+Allie (happy): Yet.
+
 leave Maple
 
-join Ramci (neutral) left
-join Zuzu (neutral) right
-Ramci: Ramci. I took the long way here because I forgot where the cafeteria was.
-update Ramci (happy) left
-Ramci: On the bright side, I now know three exits and one vending machine.
+join Ramci (neutral) right
+Ramci: Ramci.
+Ramci: I took the long way here by accident, so if you ever get lost, ask literally anyone else.
+update Ramci (happy) right
+Ramci: On the bright side, I now know where the vending machine hides.
 
-Zuzu: I'm Zuzu. I knew exactly where I was going and still arrived dramatically.
-update Zuzu (happy) right
-Zuzu: Which, for the record, is better than arriving normally.
+Allie (happy): That's useful information, actually.
 
 leave Ramci
+
+join Zuzu (neutral) right
+Zuzu: I'm Zuzu.
+Zuzu: I absolutely knew where I was going the whole time.
+update Zuzu (happy) right
+Zuzu: I was just making the entrance feel expensive.
+
+Allie (neutral): Zuzu narrates their own life like it's a season finale.
+Allie (happy): We support it.
+
 leave Zuzu
+
+join Eve (neutral) right
+Eve: Hey, {PlayerName}. I'm Eve.
+Eve: I was trying to decide whether to say something cool first.
+update Eve (happy) right
+Eve: This is me deciding not to overthink it. Hi.
+
+Allie (happy): Honestly, that's one of the coolest openings we've had all day.
+
+leave Eve
+
+join Klara (neutral) right
+Klara: Klara.
+Klara: I was observing the vibe before introducing myself.
+update Klara (happy) right
+Klara: Verdict: acceptable. You can stay.
+
+Allie (neutral): High praise.
+Allie (happy): Very high praise, actually.
+
+leave Klara
+
+join PP (neutral) right
+PP: I'm PP.
+PP: Nobody panic, I'm friendlier than I sound.
+update PP (happy) right
+PP: Usually.
+
+Allie (happy): That joke gets better every time.
+Allie (neutral): It does not.
+PP (happy): You're both wrong, and that's okay.
+
+leave PP
+
+join Stanky (neutral) right
+Stanky: Name's Stanky.
+Stanky: Before you ask, yes, that's really what everyone calls me.
+update Stanky (happy) right
+Stanky: No, I will not be explaining it today.
+
+Allie (happy): Tragic. That was definitely my next question.
+
+leave Stanky
+
+join Vic (neutral) right
+Vic: Vic.
+Vic: I was going to do a normal introduction, but everybody else set the bar too weird.
+update Vic (happy) right
+Vic: So I'll just say welcome. You're interesting already.
+
+Allie (happy): See? Smooth. Efficient. Terrifyingly competent.
+
+leave Vic
 
 join Allie (neutral) left
 join Player (neutral) center
-Allie: Okay, last one.
-Allie: {PlayerName}, your turn. Give the room the official version.
 
-Player: I'm {PlayerName}. Apparently I walked into a full cafeteria welcome committee.
+Allie: Okay, your turn.
+Allie: Give the table the official version of you.
+
+Player: I'm {PlayerName}.
+Player: I came in expecting one person and somehow found an entire cast list.
 update Player (happy) center
-Player: Honestly? Could be worse.
+Player: But honestly? This seems promising.
 
 update Allie (happy) left
-Allie: See? Nailed it.
-Allie: Now nobody gets to say they haven't met you.
+Allie: There we go.
+Allie: Now everybody's met everybody, more or less.
 
 leave Player
-update Allie center
-Allie (neutral): That's the whole crew, more or less.
-Allie (happy): Welcome to the table, {PlayerName}.
+
+join Bing (neutral) right
+update Bing (happy) right
+Bing: And now you know we're all at least a little strange.
+
+join Eve (neutral) center
+update Eve (happy) center
+Eve: Which is probably the best possible first impression.
+
+leave Eve
+leave Bing
+
+join Allie (neutral) center
+Allie: So, that's the group.
+update Allie (happy) center
+Allie: Welcome to the table, {PlayerName}.
 
 leave --All--

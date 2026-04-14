@@ -12,9 +12,9 @@
 "name": "Mood 1",
 "pitch_base": 1.0,
 "pitch_variance": -0.2,
-"skip_characters": 5.0,
+"skip_characters": 7.0,
 "sound_path": "res://assets/voices/bing_voice.mp3",
-"volume_base": 0.0,
+"volume_base": 10.0,
 "volume_variance": 0.0
 }
 },
