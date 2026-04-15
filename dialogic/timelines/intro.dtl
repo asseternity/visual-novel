@@ -1,191 +1,327 @@
 [signal arg="bg:Backstreet_Spring_Afternoon"]
 
 join Allie (neutral) center
-Allie: Hey there! Wait... what was your name again?
+Allie: Hey there! Wait... what was your tag again?
 [text_input var="PlayerName" text="What is your name?"]
 
 update Allie (happy) center
-Allie: Oh hey {PlayerName}! You made it.
-Allie: I was just thinking about you.
+Allie: Oh, right. {PlayerName}.
+Allie: Good, you made it before tryouts started.
 
 update Allie (neutral) center
-Allie: Everyone's inside already. We were about to start without you.
+Allie: Today's the varsity esports team tryout.
+Allie: Which means everyone's pretending to be chill and absolutely nobody is chill.
 Allie: So what's the deal?
 
 - Hey Allie, good to see you!
 	update Allie (happy) center
 	Allie: Awww, you're sweet.[signal=Allie:morale:+10][signal=Allie:relationship:+5]
 - ...do I know you?
-	update Allie (neutral) center
-	Allie: Oh. Right. Nevermind.[signal=Allie:morale:-15][signal=Allie:relationship:-5]
+	update Allie (angry) center
+	Allie: Wow. Incredible. I'm writing that one down.[signal=Allie:morale:-15][signal=Allie:relationship:-5]
 - Tell me a joke.
-	Allie (neutral): Uh, okay! Why did the bicycle fall over?[signal=Allie:morale:+5]
+	update Allie (neutral) center
+	Allie: Fine. What do you call a ranked match with no comms?[signal=Allie:morale:+5]
 	update Allie (happy) center
-	Allie: Because it was two-tired!
+	Allie: A loss streak.
+
+update Allie (sad) center
+Allie: Okay, joking aside, if this tryout goes badly I'm going to feel awful for dragging half the school here.
 
 update Allie (happy) center
-Allie: Anyway, come on. The whole table wants to meet the mysterious {PlayerName}.
+Allie: But it won't. Probably.
+Allie: Come on, registration's inside.
 
 [signal arg="bg:Cafeteria_Day"]
 
 update Allie left
 join Bing (neutral) right
-Bing: Hey {PlayerName}, mind if I join?
+Bing: Hey, {PlayerName}... mind if I queue near you?
+Bing: I know it's solo tryouts, but it's less terrifying if I can at least stand next to someone I recognize.
 
 - Of course!
 	update Bing (happy) right
 	Bing: Thanks![signal=Bing:morale:+10][signal=Bing:relationship:+5]
 - Actually, I'm busy.
-	update Bing (neutral) right
+	update Bing (sad) right
 	Bing: Oh... okay.[signal=Bing:morale:-10]
 
 update Allie (neutral) left
-Allie: Too late now. You're getting the full welcome tour either way.
+Allie: Too late. You're both in the blast radius now.
+Allie: The sign-in tablet crashed, one headset is dead, and Vic already posted the first rotation.
+
+update Bing (angry) right
+Bing: Wait, what?
+Bing: They posted the rotation before the setups were ready?
+
+update Bing (sad) right
+Bing: I am going to embarrass myself in 4K.
+
 update Bing (happy) right
-Bing: We made it kind of official.
-Bing: Not, like, scary official. Just cafeteria official.
+Bing: ...unless I somehow pop off. That could happen. Statistically. Maybe.
+
+update Allie (angry) left
+Allie: I'm mostly mad because I told them we needed ten more minutes.
+
+update Allie (sad) left
+Allie: For one horrible second I thought we'd have to cancel tryouts.
 
 update Allie (happy) left
-Allie: It's simple. Everybody says hi, acts normal for five seconds, and then we all pretend this wasn't staged.
+Allie: But no. We adapt. That's esports, baby.
+Allie: Since you're here, you might as well meet the rest of the chaos roster.
 
 leave Bing
 
 join Cyan (neutral) right
-Cyan: I'm Cyan. I look serious when I'm concentrating.
-update Cyan (happy) right
-Cyan: I am, however, incredibly fun once snacks are involved.
+Cyan: YO. You're {PlayerName}, right?
+Cyan: I'm Cyan. Flex role. Volume role. General menace role.
 
-Allie (neutral): Cyan says that like it's a secret.
-Allie (happy): It is not a secret.
+update Cyan (happy) right
+Cyan: If there's a crowd, I play better.
+Cyan: If there's a crowd and snacks, I become unstoppable.
+
+update Cyan (angry) right
+Cyan: WHO unplugged the warmup station?
+Cyan: If my aim routine is gone, I'm taking names.
+
+update Cyan (sad) right
+Cyan: Aw, man.
+Cyan: My playlist died with the speakers too.
+
+update Allie (happy) left
+Allie: Cyan experiences every emotion at maximum settings.
 
 leave Cyan
 
 join Dimple (neutral) right
-Dimple: Hi! I'm Dimple.
-Dimple: I claimed the best seat before anyone else could.
-update Dimple (happy) right
-Dimple: Which means you may sit near me if you bring fries.
+Dimple: Dimple.
+Dimple: Analyst-brain, support player, and the only person here who alphabetized the sign-in sheet for fun.
 
-Allie (happy): See? Very welcoming. Weirdly specific, but welcoming.
+update Dimple (happy) right
+Dimple: Also I brought matchup notes.
+Dimple: Laminated. Like a normal person.
+
+update Dimple (angry) right
+Dimple: Why is this keyboard sticky?
+Dimple: That feels less like tech setup and more like a cry for help.
+
+update Dimple (sad) right
+Dimple: Oh, cool.
+Dimple: I dropped my laminated notes under the vending machine. My legacy is over.
+
+update Allie (neutral) left
+Allie: Dimple says everything like a joke, which is how you know it matters.
 
 leave Dimple
 
 join Maple (neutral) right
-Maple: I'm Maple. I had a dramatic entrance planned.
-Maple: Then the lunch tray happened.
-update Maple (happy) right
-Maple: I saved the drink, though, so I still count that as elegance.
+Maple: HI.
+Maple: I'M MAPLE.
+Maple: I HAVE BEEN READY FOR TRYOUTS SINCE LAST TUESDAY.
 
-Allie (neutral): Maple has never lost an argument with physics.
-Allie (happy): Yet.
+update Maple (happy) right
+Maple: This is so exciting!
+Maple: New people! New comps! New scrims! Possible glory!
+
+update Maple (angry) right
+Maple: WHO STOLE THE GOOD MOUSEPAD?
+Maple: THERE WAS A SYSTEM. A FAIR SYSTEM.
+
+update Maple (sad) right
+Maple: Oh no...
+Maple: The backup headset only works on one side.
+Maple: That's like losing half a battle cry.
+
+update Allie (happy) left
+Allie: Maple is loud enough to count as team morale.
 
 leave Maple
 
 join Ramci (neutral) right
-Ramci: Ramci.
-Ramci: I took the long way here by accident, so if you ever get lost, ask literally anyone else.
-update Ramci (happy) right
-Ramci: On the bright side, I now know where the vending machine hides.
+Ramci: Hi.
+Ramci: I'm Ramci.
+Ramci: I play anchor. I don't say much.
 
-Allie (happy): That's useful information, actually.
+update Ramci (happy) right
+Ramci: It's nice to meet you, though.
+Ramci: You seem calmer than most people here.
+
+update Ramci (angry) right
+Ramci: I do get annoyed when people slam desks after one missed shot.
+Ramci: It makes the whole room worse.
+
+update Ramci (sad) right
+Ramci: I was hoping the tryout room would feel focused.
+Ramci: Right now it mostly feels... nervous.
+
+update Allie (neutral) left
+Allie: Ramci says twelve words and somehow wins the argument.
 
 leave Ramci
 
 join Zuzu (neutral) right
+Zuzu: H-hi.
 Zuzu: I'm Zuzu.
-Zuzu: I absolutely knew where I was going the whole time.
-update Zuzu (happy) right
-Zuzu: I was just making the entrance feel expensive.
+Zuzu: I, uh, signed in twice by accident.
 
-Allie (neutral): Zuzu narrates their own life like it's a season finale.
-Allie (happy): We support it.
+update Zuzu (happy) right
+Zuzu: But I fixed it.
+Zuzu: Mostly.
+Zuzu: I think.
+
+update Zuzu (angry) right
+Zuzu: Okay, I am a little mad that the form asked for “main role” and “realistic role.”
+Zuzu: That's just rude.
+
+update Zuzu (sad) right
+Zuzu: I always get weird at tryouts.
+Zuzu: Everyone else looks like they know where to stand.
+
+update Allie (happy) left
+Allie: Zuzu's fine.
+Allie: Zuzu just needs ten minutes and one good queue.
 
 leave Zuzu
 
 join Eve (neutral) right
-Eve: Hey, {PlayerName}. I'm Eve.
-Eve: I was trying to decide whether to say something cool first.
-update Eve (happy) right
-Eve: This is me deciding not to overthink it. Hi.
+Eve: Hey.
+Eve: I'm Eve.
+Eve: Deep breaths. It's just tryouts, not a space launch.
 
-Allie (happy): Honestly, that's one of the coolest openings we've had all day.
+update Eve (happy) right
+Eve: This part's kind of nice, actually.
+Eve: New faces, fresh bracket, low stakes until someone says “synergy” too seriously.
+
+update Eve (angry) right
+Eve: I do hate when people act like one bad round means you're doomed forever.
+Eve: That's fake dramatic.
+
+update Eve (sad) right
+Eve: I mostly feel bad for the first-years.
+Eve: They always look like they're waiting to be judged by a panel of gods.
+
+update Allie (neutral) left
+Allie: Eve says terrifyingly reasonable things and then everybody calms down for free.
 
 leave Eve
 
 join Klara (neutral) right
 Klara: Klara.
-Klara: I was observing the vibe before introducing myself.
-update Klara (happy) right
-Klara: Verdict: acceptable. You can stay.
+Klara: I was told this was a tryout, but the energy says ritual sacrifice.
 
-Allie (neutral): High praise.
-Allie (happy): Very high praise, actually.
+update Klara (happy) right
+Klara: Which is fine.
+Klara: I do some of my best work under apocalyptic conditions.
+
+update Klara (angry) right
+Klara: If the bracket maker seeded me below a guy named “xxAimWizardxx,” I will become a weather event.
+
+update Klara (sad) right
+Klara: Tragic.
+Klara: Nobody appreciates the artistry of a properly intimidating entrance.
+
+update Allie (happy) left
+Allie: Klara's normal.
+Allie: Our definition of normal just drifted over time.
 
 leave Klara
 
 join PP (neutral) right
-PP: I'm PP.
-PP: Nobody panic, I'm friendlier than I sound.
-update PP (happy) right
-PP: Usually.
+PP: PP.
+PP: Don't make a face. I know what my tag looks like on the sheet.
 
-Allie (happy): That joke gets better every time.
-Allie (neutral): It does not.
-PP (happy): You're both wrong, and that's okay.
+update PP (happy) right
+PP: I'm here to fry exactly three lobbies and then become mysteriously humble in interviews.
+
+update PP (angry) right
+PP: I am not losing a station because somebody “called dibs.”
+PP: This is tryouts, not recess.
+
+update PP (sad) right
+PP: Also my best controller grip tore in my bag, so if I look haunted, that's why.
+
+update Allie (neutral) left
+Allie: PP talks like a villain and then lends people chargers.
 
 leave PP
 
 join Stanky (neutral) right
-Stanky: Name's Stanky.
-Stanky: Before you ask, yes, that's really what everyone calls me.
-update Stanky (happy) right
-Stanky: No, I will not be explaining it today.
+Stanky: Stanky.
+Stanky: Yeah, that's the tag.
+Stanky: No, you don't get the story yet.
 
-Allie (happy): Tragic. That was definitely my next question.
+update Stanky (happy) right
+Stanky: If the scrims are messy, good.
+Stanky: Messy games tell you who's actually awake.
+
+update Stanky (angry) right
+Stanky: If one more person calls every role “easy,” I'm starting a fight in the group chat.
+
+update Stanky (sad) right
+Stanky: I do kind of miss when this was just us playing after class.
+Stanky: Tryouts make everything feel heavier.
+
+update Allie (sad) left
+Allie: ...yeah.
+Allie: A little heavier than last season.
 
 leave Stanky
 
 join Vic (neutral) right
 Vic: Vic.
-Vic: I was going to do a normal introduction, but everybody else set the bar too weird.
-update Vic (happy) right
-Vic: So I'll just say welcome. You're interesting already.
+Vic: Team captain.
+Vic: Welcome to the part where everybody pretends this clipboard isn't deciding their week.
 
-Allie (happy): See? Smooth. Efficient. Terrifyingly competent.
+update Vic (happy) right
+Vic: For what it's worth, I like seeing new players show up.
+Vic: It means people still care enough to try.
+
+update Vic (angry) right
+Vic: What I do not like is preventable chaos.
+Vic: We had a schedule. The schedule had feelings.
+
+update Vic (sad) right
+Vic: I hate when people think one bad first impression is permanent.
+Vic: Some of the best players start by shaking so hard they can barely click.
+
+update Allie (happy) left
+Allie: See? Underneath the captain voice, Vic is almost nice.
 
 leave Vic
 
-join Allie (neutral) left
 join Player (neutral) center
+Player: So this is the team.
+Player: Loud. Nervous. Slightly doomed.
+Player: Kind of incredible.
 
-Allie: Okay, your turn.
-Allie: Give the table the official version of you.
-
-Player: I'm {PlayerName}.
-Player: I came in expecting one person and somehow found an entire cast list.
 update Player (happy) center
-Player: But honestly? This seems promising.
+Player: I like it.
 
-update Allie (happy) left
-Allie: There we go.
-Allie: Now everybody's met everybody, more or less.
+update Player (angry) center
+Player: I do not like that my first official impression might happen on a broken setup.
 
-leave Player
+update Player (sad) center
+Player: And now that I'm here, I really don't want to bomb this.
+
+update Player (happy) center
+Player: Guess that means I care.
 
 join Bing (neutral) right
 update Bing (happy) right
-Bing: And now you know we're all at least a little strange.
+Bing: Oh, good.
+Bing: It's not just me.
 
-join Eve (neutral) center
-update Eve (happy) center
-Eve: Which is probably the best possible first impression.
+update Allie (neutral) left
+Allie: Alright, last thing before Vic starts the first wave.
 
-leave Eve
-leave Bing
+update Allie (angry) left
+Allie: Nobody touches the captain's bracket sheet.
 
-join Allie (neutral) center
-Allie: So, that's the group.
-update Allie (happy) center
-Allie: Welcome to the table, {PlayerName}.
+update Allie (sad) left
+Allie: Nobody melts down if they miss one shot.
+
+update Allie (happy) left
+Allie: And nobody leaves before I can say I told you so when you do great.
+Allie: Welcome to tryouts, {PlayerName}.
 
 leave --All--

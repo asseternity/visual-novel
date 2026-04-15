@@ -50,14 +50,13 @@ Rousing Camraderie - let's get ready to rumble
 [v] Update Bung's design
 [v] check in with the romanceables
 [v] Voice samples for others with: https://online-video-cutter.com/crop-video and https://www.freeconvert.com/mp4-to-mp3 and https://clideo.com/editor/322045393/export-result
-[_] Finalize all characters with designs and animalese
+[v] Finalize all characters with designs and animalese
 [_] Finalize writing tasks
-
-[_] decide on theme
-[_] worldbuilding
-[_] write story miro board
-[_] have CONFLICT and SERIOUS DRAMA
-[_] go through phone notes and integrate all
+    [_] decide on theme
+    [_] worldbuilding
+    [_] write story miro board
+    [_] have CONFLICT and SERIOUS DRAMA
+    [_] go through phone notes and integrate all
 
 [_] write characters - detailed, worledview, Agrestia-like
 [_] write articy import tool

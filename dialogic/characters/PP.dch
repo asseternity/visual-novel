@@ -28,6 +28,15 @@
 &"nicknames": [""],
 &"offset": Vector2(0, 0),
 &"portraits": {
+"angry": {
+"export_overrides": {
+"image": "\"res://assets/characters/angry & sad/tt_angry.png\""
+},
+"mirror": false,
+"offset": Vector2(0, 0),
+"scale": 1,
+"scene": ""
+},
 "happy": {
 "export_overrides": {
 "image": "\"res://assets/characters/tt_happy.png\""
@@ -40,6 +49,15 @@
 "neutral": {
 "export_overrides": {
 "image": "\"res://assets/characters/tt_neutral.png\""
+},
+"mirror": false,
+"offset": Vector2(0, 0),
+"scale": 1,
+"scene": ""
+},
+"sad": {
+"export_overrides": {
+"image": "\"res://assets/characters/angry & sad/tt_sad.png\""
 },
 "mirror": false,
 "offset": Vector2(0, 0),
