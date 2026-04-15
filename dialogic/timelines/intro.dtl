@@ -4,6 +4,8 @@ join Allie (neutral) center
 Allie: Hey there! Wait... what was your tag again?
 [text_input var="PlayerName" text="What is your name?"]
 
+Player: It's {PlayerName}. Nice to meet you! I'm really glad to be here.
+
 update Allie (happy) center
 Allie: Oh, right. {PlayerName}.
 Allie: Good, you made it before tryouts started.
@@ -33,6 +35,10 @@ Allie: But it won't. Probably.
 Allie: Come on, registration's inside.
 
 [signal arg="bg:Cafeteria_Day"]
+
+The cafeteria buzzed with nervous energy.
+A dozen players stared at glowing monitors.
+Somewhere in the back, a headset hit the floor.
 
 update Allie left
 join Bing (neutral) right

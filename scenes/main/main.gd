@@ -1,4 +1,3 @@
-# res://scenes/main/main.gd
 extends Node
 
 const BG_DIR := "res://assets/backgrounds/"
@@ -228,26 +227,20 @@ func _search_for(root: Node, predicate: Callable) -> Control:
 	return null
 
 # ─── PORTRAIT JUICE SYSTEM ────────────────────────────────────────────
-const EMOTION_SFX_PATH = "res://assets/sfx/emotions/"
+const EMOTION_SFX_PATH := "res://assets/sfx/emotions/"
 
-# Map portrait naming keywords to your specific audio files
-const EMOTION_MAP = {
-	"happy": "#11 Haha.wav", "laugh": "#11 Haha.wav", "smile": "#11 Haha.wav",
-	"sad": "#7 Grief.wav", "cry": "#7 Grief.wav", "grief": "#7 Grief.wav",
-	"angry": "#8 Madness.wav", "mad": "#8 Madness.wav",
-	"shock": "#4 Alert.wav", "surprise": "#4 Alert.wav", "alert": "#4 Alert.wav",
-	"blush": "#9 Oops.wav", "shy": "#9 Oops.wav", "oops": "#9 Oops.wav",
-	"smug": "#1 Victory.wav", "victory": "#1 Victory.wav",
-	"relief": "#5 Relief.wav",
-	"fail": "#2 Fail.wav",
-	"medic": "#10 Medic.wav",
-	"mystery": "#3 Mystery.wav",
-	"ominous": "#6 Ominous.wav"
+# Only three emotion sound buckets remain. Keep aliases so different portrait
+# names still resolve to the same happy / angry / sad sounds.
+const EMOTION_SFX := {
+	"happy": "/new_emotions/happy2.mp3",
+	"angry": "/new_emotions/angry1.mp3",
+	"sad": "/new_emotions/sad1.mp3"
 }
 
 func _on_portrait_changed(info: Dictionary) -> void:
 	var portrait_name: String = str(info.get("portrait", "")).to_lower()
 	var portrait_node: Control = info.get("node", null) as Control
+	var emotion: String = _get_emotion_bucket(portrait_name)
 	
 	# Fallback just in case Dialogic's info dict misses the node reference
 	if not is_instance_valid(portrait_node):
@@ -256,42 +249,59 @@ func _on_portrait_changed(info: Dictionary) -> void:
 	if not is_instance_valid(portrait_node):
 		return
 
-	# 1. PLAY JUICY SFX
-	var sfx_file: String = ""
-	for key in EMOTION_MAP:
-		if key in portrait_name:
-			sfx_file = EMOTION_MAP[key]
-			break
-	
-	if sfx_file != "":
-		# Spawn a temporary AudioStreamPlayer
-		var sfx := AudioStreamPlayer.new()
-		sfx.stream = load(EMOTION_SFX_PATH + sfx_file)
-		sfx.bus = "SFX"
-		add_child(sfx)
-		sfx.play()
-
-		# ── AUDIO FADE OUT JUICE ──
-		var fade_tween := create_tween()
-		# Step 1: Wait exactly 0.5 seconds at normal volume
-		fade_tween.tween_interval(0.5)
-		# Step 2: Fade volume down to -50dB (silent) over 1.5 seconds
-		fade_tween.tween_property(sfx, "volume_db", -50.0, 1.5)\
-			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-		# Step 3: Delete the player from the scene once the fade finishes
-		fade_tween.tween_callback(sfx.queue_free)
-
-	# 2. ADD VISUAL JUICE!
-	# We use your existing UITheme toolkit to make the portrait physically react
+	# Always give portrait swaps a little physical pop.
 	UITheme.squish(portrait_node, 0.15)
-	
-	# Tailor the particle/movement vibe based on the emotion
-	if "mad" in portrait_name or "angry" in portrait_name or "shock" in portrait_name:
-		UITheme.shake(portrait_node, 8.0, 0.3)
-		UITheme.burst(portrait_node, UITheme.COLOR_BAD, 18)
-	elif "happy" in portrait_name or "victory" in portrait_name or "smug" in portrait_name:
-		UITheme.wiggle(portrait_node, 4.0, 2)
-		UITheme.confetti(portrait_node, 24)
-	else:
-		# A default subtle cyan burst for all other emotion changes
-		UITheme.burst(portrait_node, UITheme.COLOR_ACCENT_2, 12)
+
+	# 1. PLAY ONLY HAPPY / ANGRY / SAD SFX
+	if EMOTION_SFX.has(emotion):
+		_play_emotion_sfx(EMOTION_SFX[emotion])
+
+	# 2. ADD GAME-JUICE FOR HAPPY / ANGRY / SAD (and keep a soft fallback for others)
+	match emotion:
+		"happy":
+			UITheme.wiggle(portrait_node, 4.5, 2)
+			UITheme.confetti(portrait_node, 24)
+			UITheme.burst(portrait_node, UITheme.COLOR_GOOD, 16)
+			UITheme.background_flash(UITheme.COLOR_GOOD, 0.10)
+		"angry":
+			UITheme.shake(portrait_node, 8.0, 0.30)
+			UITheme.burst(portrait_node, UITheme.COLOR_BAD, 18)
+			UITheme.background_flash(UITheme.COLOR_BAD, 0.12)
+			UITheme.screen_shake(4.0, 0.16)
+		"sad":
+			UITheme.burst(portrait_node, UITheme.COLOR_ACCENT_2, 12)
+			UITheme.background_flash(UITheme.COLOR_ACCENT_2, 0.10)
+			_animate_sad_drop(portrait_node)
+		_:
+			UITheme.burst(portrait_node, UITheme.COLOR_ACCENT_2, 8)
+
+func _get_emotion_bucket(portrait_name: String) -> String:
+	if "happy" in portrait_name or "laugh" in portrait_name or "smile" in portrait_name:
+		return "happy"
+	if "angry" in portrait_name or "mad" in portrait_name:
+		return "angry"
+	if "sad" in portrait_name or "cry" in portrait_name or "grief" in portrait_name:
+		return "sad"
+	return ""
+
+func _play_emotion_sfx(sfx_file: String) -> void:
+	var sfx := AudioStreamPlayer.new()
+	sfx.stream = load(EMOTION_SFX_PATH + sfx_file)
+	sfx.bus = "SFX"
+	add_child(sfx)
+	sfx.play()
+
+	# Hold briefly, then fade down and clean up.
+	var fade_tween := create_tween()
+	fade_tween.tween_interval(0.5)
+	fade_tween.tween_property(sfx, "volume_db", -50.0, 1.5)\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	fade_tween.tween_callback(sfx.queue_free)
+
+func _animate_sad_drop(portrait_node: Control) -> void:
+	var start_pos: Vector2 = portrait_node.position
+	var t := create_tween()
+	t.tween_property(portrait_node, "position:y", start_pos.y + 10.0, 0.10)\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	t.tween_property(portrait_node, "position:y", start_pos.y, 0.28)\
+		.set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
